@@ -27,11 +27,13 @@ def index():
                     word_audio_file = os.path.join(STATIC_DIR, f"{word}.mp3")
                     tts.save(word_audio_file)
 
-                    # Load the audio file
-                    word_audio = AudioSegment.from_file(word_audio_file)
+                    # Load the audio file into pydub
+                    word_audio = AudioSegment.from_mp3(word_audio_file)
+
+                    # Add the word audio to the combined audio
                     combined_audio += word_audio
 
-                    # Add a pause after each word
+                    # Add a pause after each word (in milliseconds)
                     combined_audio += AudioSegment.silent(duration=pause_time * 1000)
 
                 # Save the final combined audio
