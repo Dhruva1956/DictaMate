@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DictaMate</title>
+    <title>Dictamate</title>
 </head>
 <body>
-    <h1>DictaMate</h1>
-    <h1>Dictates While You Write</h1>
+    <h1>Dictamate</h1>
     <form method="POST">
         <label for="sentence">Enter a sentence:</label><br>
-        <textarea id="sentence" name="sentence" rows="4" cols="50" required></textarea><br><br>
+        <input type="text" id="sentence" name="sentence" required><br><br>
 
-        <label for="pause_time">Pause time between words (seconds):</label><br>
-        <input type="number" id="pause_time" name="pause_time" step="0.1" value="1.0" min="0.1" required><br><br>
+        <label for="pause_time">Pause Time (seconds):</label><br>
+        <input type="number" id="pause_time" name="pause_time" step="0.1" value="1"><br><br>
 
-        <button type="submit">Start Dictation</button>
+        <button type="submit">Dictate</button>
     </form>
 
     {% if message %}
         <p style="color: green;">{{ message }}</p>
+        <audio controls>
+            <source src="{{ audio_file }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     {% elif error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}

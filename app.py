@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
-import pyttsx3
+from gtts import gTTS
+import os
 
 app = Flask(__name__)
 
@@ -10,23 +11,25 @@ def index():
         pause_time = float(request.form.get("pause_time", 1.0))  # Default to 1 second
 
         if sentence:
-            engine = pyttsx3.init()
-            engine.setProperty('rate', 150)  # Set speaking rate
-            engine.setProperty('volume', 1.0)  # Set volume level
+            try:
+                # Generate speech using gTTS
+                tts = gTTS(text=sentence, lang='en')
+                audio_file = "static/output.mp3"
+                tts.save(audio_file)
 
-            # Set voice explicitly if needed
-            voices = engine.getProperty('voices')
-            engine.setProperty('voice', voices[0].id)  # Use a valid voice index
+                # Optionally, you can play the file using a player
+                os.system(f"mpg123 {audio_file}")
 
-            for word in sentence.split():
-                engine.say(word)
-                engine.runAndWait()
-
-            return render_template("index.html", message="Dictation complete!")
+                return render_template(
+                    "index.html", message="Dictation complete!", audio_file=audio_file
+                )
+            except Exception as e:
+                return render_template(
+                    "index.html", error=f"An error occurred: {str(e)}"
+                )
         else:
             return render_template("index.html", error="Please enter a sentence for dictation.")
     return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True, port=5000)
-    #app.run(debug=True)
