@@ -40,7 +40,9 @@ def index():
 
                 # Clean up temporary word files
                 for word in words:
-                    os.remove(os.path.join(STATIC_DIR, f"{word}.mp3"))
+                    temp_file = os.path.join(STATIC_DIR, f"{word}.mp3")
+                    if os.path.exists(temp_file):
+                        os.remove(temp_file)
 
                 return render_template(
                     "index.html", message="Dictation complete!", audio_file="output.mp3"
